@@ -1,7 +1,7 @@
 package com.alexalins.bagdex.security;
 
-import com.alexalins.bagdex.domain.model.User;
-import com.alexalins.bagdex.repository.UserRepository;
+import com.alexalins.bagdex.domain.model.Treinador;
+import com.alexalins.bagdex.repository.TreinadorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,16 +12,16 @@ import org.springframework.stereotype.Service;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private UserRepository userRepository;
+    private TreinadorRepository treinadorRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(username);
+        Treinador treinador = treinadorRepository.findByEmail(username);
 
-        if(user == null) {
+        if(treinador == null) {
             throw new UsernameNotFoundException("Usuario não encontrado");
         }
 
-        return user;
+        return treinador;
     }
 }

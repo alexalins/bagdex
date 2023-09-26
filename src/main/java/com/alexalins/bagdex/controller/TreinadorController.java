@@ -1,8 +1,8 @@
 package com.alexalins.bagdex.controller;
 
-import com.alexalins.bagdex.domain.dto.UserDTO;
-import com.alexalins.bagdex.domain.model.User;
-import com.alexalins.bagdex.service.UserService;
+import com.alexalins.bagdex.domain.dto.TreinadorDTO;
+import com.alexalins.bagdex.domain.model.Treinador;
+import com.alexalins.bagdex.service.TreinadorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,25 +14,25 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/users")
-public class UserController {
+public class TreinadorController {
 
     @Autowired
-    private UserService userService;
+    private TreinadorService treinadorService;
 
     @GetMapping()
     public ResponseEntity get() {
-        List<UserDTO> list = userService.getUsers();
+        List<TreinadorDTO> list = treinadorService.getTreinadores();
         return ResponseEntity.ok(list);
     }
 
     @GetMapping("/info")
-    public UserDTO userInfo(@AuthenticationPrincipal User user) {
-        return UserDTO.create(user);
+    public TreinadorDTO userInfo(@AuthenticationPrincipal Treinador treinador) {
+        return TreinadorDTO.create(treinador);
     }
 
     @PostMapping("/cadastro")
-    public ResponseEntity save(@RequestBody User user) {
-        UserDTO u = userService.save(user);
+    public ResponseEntity save(@RequestBody Treinador treinador) {
+        TreinadorDTO u = treinadorService.save(treinador);
         return ResponseEntity.created(getUri(u.getId())).build();
     }
 

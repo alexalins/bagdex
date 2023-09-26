@@ -1,13 +1,13 @@
 package com.alexalins.bagdex.domain.dto;
 
-import com.alexalins.bagdex.domain.model.User;
+import com.alexalins.bagdex.domain.model.Treinador;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 
 @Data
-public class UserDTO {
+public class TreinadorDTO {
     private Long id;
     private String login;
     private String nome;
@@ -16,14 +16,14 @@ public class UserDTO {
     // token jwt
     private String token;
 
-    public static UserDTO create(User user) {
+    public static TreinadorDTO create(Treinador treinador) {
         ModelMapper modelMapper = new ModelMapper();
-        UserDTO dto = modelMapper.map(user, UserDTO.class);
+        TreinadorDTO dto = modelMapper.map(treinador, TreinadorDTO.class);
         return dto;
     }
 
-    public static UserDTO create(User user, String token) {
-        UserDTO dto = create(user);
+    public static TreinadorDTO create(Treinador treinador, String token) {
+        TreinadorDTO dto = create(treinador);
         dto.token = token;
         return dto;
     }

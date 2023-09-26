@@ -1,6 +1,6 @@
 package com.alexalins.bagdex.security.jwt;
 
-import com.alexalins.bagdex.domain.model.User;
+import com.alexalins.bagdex.domain.model.Treinador;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -54,9 +54,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                             FilterChain filterChain, Authentication authentication) throws IOException {
-        User user = (User) authentication.getPrincipal();
+        Treinador treinador = (Treinador) authentication.getPrincipal();
 
-        String jwtToken = JwtUtil.createToken(user);
+        String jwtToken = JwtUtil.createToken(treinador);
 
         String json = ServletUtil.getJson("token", jwtToken);
         // String json = User.create(user, jwtToken).toJson();
