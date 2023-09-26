@@ -18,10 +18,10 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 public class JwtUtil {
-    private static final String JWT_SECRET = "Yzb29SVtb9dlqVTsuijbYQYHoCqOCI+0E04DGqcBNfs=";
+    private static final byte[] JWT_SECRET = Keys.secretKeyFor(SignatureAlgorithm.HS512).getEncoded();
 
     public static Claims getClaims(String token) {
-        byte[] signingKey = JwtUtil.JWT_SECRET.getBytes();
+        byte[] signingKey = JwtUtil.JWT_SECRET;
 
         token = token.replace("Bearer ", "");
 
@@ -61,12 +61,8 @@ public class JwtUtil {
     }
 
     public static String createToken(UserDetails user) {
-        List<String> roles = user.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
 
-        byte[] signingKey = JwtUtil.JWT_SECRET.getBytes();
+        byte[] signingKey = JwtUtil.JWT_SECRET;
 
         int days = 10;
         long time = days * 24 /*horas*/ * 60 /*min*/ * 60 /*seg*/ * 1000  /*milis*/;
@@ -76,7 +72,6 @@ public class JwtUtil {
                 .signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
                 .setSubject(user.getUsername())
                 .setExpiration(expiration)
-                .claim("rol", roles)
                 .compact();
     }
 
