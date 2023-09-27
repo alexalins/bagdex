@@ -13,27 +13,28 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1/treinador")
 public class TreinadorController {
 
     @Autowired
     private TreinadorService treinadorService;
 
-    @GetMapping()
-    public ResponseEntity get() {
+    @GetMapping("/lista")
+    public ResponseEntity getListaDeTreinadores() {
         List<TreinadorDTO> list = treinadorService.getTreinadores();
         return ResponseEntity.ok(list);
-    }
-
-    @GetMapping("/info")
-    public TreinadorDTO userInfo(@AuthenticationPrincipal Treinador treinador) {
-        return TreinadorDTO.create(treinador);
     }
 
     @PostMapping("/cadastro")
     public ResponseEntity save(@RequestBody Treinador treinador) {
         TreinadorDTO u = treinadorService.save(treinador);
         return ResponseEntity.created(getUri(u.getId())).build();
+    }
+
+    @GetMapping()
+    public ResponseEntity getTreinador(@RequestBody Treinador treinador) {
+        TreinadorDTO treinadorDTO = treinadorService.getTreinadorByEmail(treinador.getEmail());
+        return ResponseEntity.ok(treinadorDTO);
     }
 
     private URI getUri(Long id) {
