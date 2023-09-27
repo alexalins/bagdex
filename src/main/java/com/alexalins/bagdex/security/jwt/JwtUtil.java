@@ -18,7 +18,7 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 public class JwtUtil {
-    private static final String JWT_SECRET = "n2r5u8x/A%D*G-KaPdSgVkYp3s6v9y$B&E(H+MbQeThWmZq4t7w!z%C*F-J@NcRf";
+    private static final String JWT_SECRET = "EEqXlX+qgeWVKz3KRvcG2z4r0A6uZHVZnxButvfanucOoKpDz++ccQINjidnputN32VsoMIktoDX";
 
     public static Claims getClaims(String token) {
         byte[] signingKey = JwtUtil.JWT_SECRET.getBytes();
