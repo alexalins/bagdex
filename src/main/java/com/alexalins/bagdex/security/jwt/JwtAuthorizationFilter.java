@@ -18,7 +18,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     private static Logger logger = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
@@ -51,13 +50,10 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(login);
 
-            List<GrantedAuthority> authorities = JwtUtil.getRoles(token);
 
-            Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+            Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, null);
 
             SecurityContextHolder.getContext().setAuthentication(auth);
-            filterChain.doFilter(request, response);
-
         } catch (RuntimeException ex) {
             logger.error("Authentication error: " + ex.getMessage(),ex);
 

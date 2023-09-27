@@ -18,10 +18,10 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 public class JwtUtil {
-    private static final byte[] JWT_SECRET = Keys.secretKeyFor(SignatureAlgorithm.HS512).getEncoded();
+    private static final String JWT_SECRET = "n2r5u8x/A%D*G-KaPdSgVkYp3s6v9y$B&E(H+MbQeThWmZq4t7w!z%C*F-J@NcRf";
 
     public static Claims getClaims(String token) {
-        byte[] signingKey = JwtUtil.JWT_SECRET;
+        byte[] signingKey = JwtUtil.JWT_SECRET.getBytes();
 
         token = token.replace("Bearer ", "");
 
@@ -62,7 +62,7 @@ public class JwtUtil {
 
     public static String createToken(UserDetails user) {
 
-        byte[] signingKey = JwtUtil.JWT_SECRET;
+        byte[] signingKey = JwtUtil.JWT_SECRET.getBytes();
 
         int days = 10;
         long time = days * 24 /*horas*/ * 60 /*min*/ * 60 /*seg*/ * 1000  /*milis*/;
