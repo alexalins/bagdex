@@ -57,6 +57,23 @@ public class TreinadorServiceTest {
     }
 
     @Test
+    public void testSaveUserErro() {
+        Treinador treinador = new Treinador();
+        treinador.setNome("Teste");
+        treinador.setEmail("test@example.com");
+        treinador.setSenha("password");
+
+        when(treinadorRepository.findByEmail(anyString())).thenReturn(treinador);
+        try {
+            treinadorService.save(treinador);
+            fail("Deveria ter lançado uma exceção de usuário existente");
+        } catch (IllegalArgumentException e) {
+            assertTrue(e.getMessage().contains("Não foi possivel cadastrar, usuário já existe"));
+        }
+        verify(treinadorRepository, never()).save(any(Treinador.class));
+    }
+
+    @Test
     public void testGetUsers() {
         when(treinadorRepository.findAll()).thenReturn(listTreinador);
 
