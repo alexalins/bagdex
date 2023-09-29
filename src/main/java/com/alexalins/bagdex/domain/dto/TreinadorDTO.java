@@ -9,7 +9,6 @@ import org.modelmapper.ModelMapper;
 @Data
 public class TreinadorDTO {
     private Long id;
-    private String login;
     private String nome;
     private String email;
 
