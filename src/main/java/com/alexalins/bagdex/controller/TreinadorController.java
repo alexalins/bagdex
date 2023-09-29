@@ -5,7 +5,6 @@ import com.alexalins.bagdex.domain.model.Treinador;
 import com.alexalins.bagdex.service.TreinadorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 

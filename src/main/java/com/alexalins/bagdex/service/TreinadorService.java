@@ -2,6 +2,7 @@ package com.alexalins.bagdex.service;
 
 import com.alexalins.bagdex.domain.dto.TreinadorDTO;
 import com.alexalins.bagdex.domain.model.Treinador;
+import com.alexalins.bagdex.exception.EmailAlreadyExistsException;
 import com.alexalins.bagdex.repository.TreinadorRepository;
 import org.modelmapper.internal.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +32,10 @@ public class TreinadorService {
 
     public TreinadorDTO save(Treinador treinador) {
         if(getTreinadorByEmail(treinador.getEmail()) != null) {
-            Assert.isNull(treinador.getEmail(), "Não foi possivel cadastrar, usuário já existe");
+            throw new EmailAlreadyExistsException("E-mail já cadastrado!");
         }
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         treinador.setSenha(encoder.encode(treinador.getSenha()));
         return TreinadorDTO.create(treinadorRepository.save(treinador));
     }
