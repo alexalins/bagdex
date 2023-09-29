@@ -1,5 +1,6 @@
 package com.alexalins.bagdex.security;
 
+import com.alexalins.bagdex.config.CorsConfig;
 import com.alexalins.bagdex.security.jwt.JwtAuthenticationFilter;
 import com.alexalins.bagdex.security.jwt.JwtAuthorizationFilter;
 import com.alexalins.bagdex.security.jwt.handler.AccessDeniedHandler;
@@ -17,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableWebSecurity
@@ -37,14 +39,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         AuthenticationManager authManager = authenticationManager();
 
-        http
+        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
+                .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/api/v1/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/users/cadastro").permitAll()
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and().csrf().disable()
+                .addFilter(new CorsConfig())
                 .addFilter(new JwtAuthenticationFilter(authManager))
                 .addFilter(new JwtAuthorizationFilter(authManager, userDetailsService))
                 .exceptionHandling()
