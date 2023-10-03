@@ -19,6 +19,7 @@ public class TreinadorService {
 
     public List<TreinadorDTO> getTreinadores() {
         List<Treinador> list = treinadorRepository.findAll();
+        System.out.println(list);
         return list.stream().map(TreinadorDTO::create).collect(Collectors.toList());
     }
 
