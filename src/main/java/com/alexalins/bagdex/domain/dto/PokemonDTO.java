@@ -1,27 +1,20 @@
 package com.alexalins.bagdex.domain.dto;
 
-import com.alexalins.bagdex.domain.model.Treinador;
+import com.alexalins.bagdex.domain.model.Pokemon;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 
 @Data
-public class TreinadorDTO {
+public class PokemonDTO {
     private Long id;
     private String nome;
-    private String email;
-    private String token;
+    private String foto;
 
-    public static TreinadorDTO create(Treinador treinador) {
+    public static PokemonDTO create(Pokemon pokemon) {
         ModelMapper modelMapper = new ModelMapper();
-        TreinadorDTO dto = modelMapper.map(treinador, TreinadorDTO.class);
-        return dto;
-    }
-
-    public static TreinadorDTO create(Treinador treinador, String token) {
-        TreinadorDTO dto = create(treinador);
-        dto.token = token;
+        PokemonDTO dto = modelMapper.map(pokemon, PokemonDTO.class);
         return dto;
     }
 
