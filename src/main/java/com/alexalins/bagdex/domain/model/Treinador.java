@@ -6,12 +6,9 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 @Entity
 @Data
@@ -26,9 +23,15 @@ public class Treinador implements UserDetails {
     private String senha;
     private String email;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "treinador_roles",
+            joinColumns = @JoinColumn(name = "treinador_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private List<Role> roles;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        return roles;
     }
 
     @Override

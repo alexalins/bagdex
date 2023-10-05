@@ -1,67 +1,49 @@
 package com.alexalins.bagdex.security;
 
-import com.alexalins.bagdex.config.CorsConfig;
-import com.alexalins.bagdex.security.jwt.JwtAuthenticationFilter;
-import com.alexalins.bagdex.security.jwt.JwtAuthorizationFilter;
-import com.alexalins.bagdex.security.jwt.handler.AccessDeniedHandler;
-import com.alexalins.bagdex.security.jwt.handler.UnauthorizedHandler;
+import com.alexalins.bagdex.security.jwt.JwtRequestFilter;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.security.Key;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    @Qualifier("userDetailsService")
-    private UserDetailsService userDetailsService;
-
-    @Autowired
-    private UnauthorizedHandler unauthorizedHandler;
-
-    @Autowired
-    private AccessDeniedHandler accessDeniedHandler;
+    private JwtRequestFilter jwtRequestFilter;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        AuthenticationManager authManager = authenticationManager();
-
-        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
-                .and()
+        http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/v1/login").permitAll()
-                //.antMatchers(HttpMethod.POST, "/api/v1/treinador/cadastro").permitAll()
-                .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**")
-                .permitAll()
+                .antMatchers("/api/v1/login").permitAll()
+                .antMatchers("/api/v1/cadastro").permitAll()
                 .anyRequest().authenticated()
-                .and().csrf().disable()
-                .addFilter(new CorsConfig())
-                .addFilter(new JwtAuthenticationFilter(authManager))
-                .addFilter(new JwtAuthorizationFilter(authManager, userDetailsService))
-                .exceptionHandling()
-                .accessDeniedHandler(accessDeniedHandler)
-                .authenticationEntryPoint(unauthorizedHandler)
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
+    @Bean
+    public Key key() {
+        return Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    }
+
+    @Bean
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        auth.userDetailsService(userDetailsService).passwordEncoder(encoder);
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 }
 
