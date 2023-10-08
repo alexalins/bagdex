@@ -45,7 +45,7 @@ public class JwtUtil {
         }
         return ((List<?>) claims
                 .get("rol")).stream()
-                .map(authority -> new SimpleGrantedAuthority((String) authority))
+                .map(authority -> new SimpleGrantedAuthority("ROLE_USER"))
                 .collect(Collectors.toList());
     }
 
@@ -61,6 +61,10 @@ public class JwtUtil {
     }
 
     public static String createToken(UserDetails user) {
+        List<String> roles = user.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
 
         byte[] signingKey = JwtUtil.JWT_SECRET.getBytes();
 
@@ -72,6 +76,7 @@ public class JwtUtil {
                 .signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
                 .setSubject(user.getUsername())
                 .setExpiration(expiration)
+                .claim("rol", roles)
                 .compact();
     }
 
