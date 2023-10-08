@@ -1,9 +1,9 @@
-package com.alexalins.bagdex.security.jwt.request;
+package com.alexalins.bagdex.security.jwt;
 
 import lombok.Data;
 
 @Data
-public class JwtRequest {
+class JwtLoginInput {
     private String email;
     private String senha;
 }

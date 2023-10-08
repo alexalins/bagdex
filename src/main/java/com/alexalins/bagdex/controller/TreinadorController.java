@@ -24,6 +24,11 @@ public class TreinadorController {
         return ResponseEntity.ok(list);
     }
 
+    @PostMapping("/cadastro")
+    public ResponseEntity save(@RequestBody Treinador treinador) {
+        TreinadorDTO u = treinadorService.save(treinador);
+        return ResponseEntity.created(getUri(u.getId())).build();
+    }
 
     @GetMapping()
     public ResponseEntity getTreinador(@RequestBody Treinador treinador) {
@@ -31,4 +36,8 @@ public class TreinadorController {
         return ResponseEntity.ok(treinadorDTO);
     }
 
+    private URI getUri(Long id) {
+        return ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(id).toUri();
+    }
 }
