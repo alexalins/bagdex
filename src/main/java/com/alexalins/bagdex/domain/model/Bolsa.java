@@ -1,5 +1,6 @@
 package com.alexalins.bagdex.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,7 +25,7 @@ public class Bolsa {
 
     private Tipo tipo;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "bolsa_pokemon_mapping",
             joinColumns = @JoinColumn(name = "bolsa_id"),

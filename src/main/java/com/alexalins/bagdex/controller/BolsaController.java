@@ -27,16 +27,14 @@ public class BolsaController {
 
     @PostMapping("/salvar")
     public ResponseEntity save(@RequestBody Bolsa bolsa) {
-        System.out.println(bolsa);
         BolsaDTO bolsaDto = bolsaService.save(bolsa);
-        System.out.println(bolsaDto);
         return ResponseEntity.created(getUri(bolsaDto.getId())).build();
     }
 
     @GetMapping("/treinador")
     public ResponseEntity getBolsaByTreinador(@RequestBody Treinador treinador) {
-        BolsaDTO bolsaDto = bolsaService.getBolsaPorTreinadorId(treinador);
-        return ResponseEntity.ok(bolsaDto);
+        List<BolsaDTO> list = bolsaService.getBolsaPorTreinadorId(treinador);
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")

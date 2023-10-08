@@ -4,6 +4,7 @@ import static org.mockito.Mockito.*;
 
 import com.alexalins.bagdex.domain.dto.TreinadorDTO;
 import com.alexalins.bagdex.domain.model.Treinador;
+import com.alexalins.bagdex.exception.EmailAlreadyExistsException;
 import com.alexalins.bagdex.repository.TreinadorRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,7 @@ public class TreinadorServiceTest {
         treinador.setId(1L);
         treinador.setNome("Teste");
         treinador.setEmail("test@example.com");
+        treinador.setSenha("teste");
         //
         listTreinador = new ArrayList<>();
         listTreinador.add(treinador);
@@ -43,14 +45,8 @@ public class TreinadorServiceTest {
 
     @Test
     public void testSaveUser() {
-        Treinador treinador = new Treinador();
-        treinador.setNome("Teste");
-        treinador.setEmail("test@example.com");
-        treinador.setSenha("password");
-
         when(treinadorRepository.findByEmail(anyString())).thenReturn(null);
         when(treinadorRepository.save(any())).thenReturn(treinador);
-
         TreinadorDTO savedUser = treinadorService.save(treinador);
 
         assertNotNull(savedUser);
@@ -58,36 +54,22 @@ public class TreinadorServiceTest {
 
     @Test
     public void testSaveUserErro() {
-        Treinador treinador = new Treinador();
-        treinador.setNome("Teste");
-        treinador.setEmail("test@example.com");
-        treinador.setSenha("password");
-
-        when(treinadorRepository.findByEmail(anyString())).thenReturn(treinador);
-        try {
-            treinadorService.save(treinador);
-            fail("Deveria ter lançado uma exceção de usuário existente");
-        } catch (IllegalArgumentException e) {
-            assertTrue(e.getMessage().contains("Não foi possivel cadastrar, usuário já existe"));
-        }
-        verify(treinadorRepository, never()).save(any(Treinador.class));
+        when(treinadorRepository.findByEmail(anyString())).thenReturn(new Treinador());
+        EmailAlreadyExistsException result = assertThrows(EmailAlreadyExistsException.class, () -> treinadorService.save(treinador));
+        assertTrue(result.getMessage().contains("E-mail já cadastrado!"));
     }
 
     @Test
     public void testGetUsers() {
         when(treinadorRepository.findAll()).thenReturn(listTreinador);
-
         List<TreinadorDTO> myUsers = treinadorService.getTreinadores();
-
         assertEquals(listTreinador.size(), myUsers.size());
     }
 
     @Test
     public void testGetUserByEmail() {
         when(treinadorRepository.findByEmail("test@example.com")).thenReturn(treinador);
-
         TreinadorDTO user = treinadorService.getTreinadorByEmail("test@example.com");
-
         assertNotNull(user);
     }
 }

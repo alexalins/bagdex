@@ -7,10 +7,19 @@ import com.alexalins.bagdex.domain.model.Treinador;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
+import org.hibernate.collection.internal.PersistentBag;
+import org.modelmapper.AbstractConverter;
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
+import org.modelmapper.spi.ConditionalConverter;
+import org.modelmapper.spi.MappingContext;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class BolsaDTO {
@@ -18,7 +27,7 @@ public class BolsaDTO {
     private String nome;
     private String descricao;
     private Tipo tipo;
-    private List<Pokemon> pokemon;
+    private List<PokemonDTO> pokemon;
     private Date data;
     private Treinador treinador;
 

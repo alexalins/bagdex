@@ -25,24 +25,18 @@ public class BolsaService {
         return list.stream().map(BolsaDTO::create).collect(Collectors.toList());
     }
 
-    public BolsaDTO getBolsaPorTreinadorId(Treinador treinador) {
-
+    public List<BolsaDTO> getBolsaPorTreinadorId(Treinador treinador) {
         if(treinador == null) {
             return null;
         }
-
-        Bolsa bolsa = bolsaRepository.findByTreinadorId(treinador.getId());
-
-        return BolsaDTO.create(bolsa);
+        List<Bolsa> bolsas = bolsaRepository.findByTreinadorId(treinador.getId());
+        return bolsas.stream().map(BolsaDTO::create).collect(Collectors.toList());
     }
 
     public BolsaDTO save(Bolsa bolsa) {
-        System.out.println(bolsa);
         Date sqlDate = new Date(DataUtil.getCurrentDate().getTime());
         bolsa.setData(sqlDate);
-        System.out.println(bolsa);
         BolsaDTO dto =  BolsaDTO.create(bolsaRepository.save(bolsa));
-        System.out.println(dto.toString());
         return dto;
     }
 
