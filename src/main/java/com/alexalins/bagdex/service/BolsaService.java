@@ -10,9 +10,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +28,14 @@ public class BolsaService {
             return null;
         }
         List<Bolsa> bolsas = bolsaRepository.findByTreinadorId(treinador.getId());
+        Comparator<Bolsa> comparadorDataDecrescente = new Comparator<Bolsa>() {
+            @Override
+            public int compare(Bolsa bolsa1, Bolsa bolsa2) {
+                return bolsa2.getData().compareTo(bolsa1.getData());
+            }
+        };
+
+        Collections.sort(bolsas, comparadorDataDecrescente);
         return bolsas.stream().map(BolsaDTO::create).collect(Collectors.toList());
     }
 
