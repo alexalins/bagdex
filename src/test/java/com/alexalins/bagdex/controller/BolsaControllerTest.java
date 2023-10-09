@@ -61,7 +61,7 @@ public class BolsaControllerTest {
 
     @Test
     public void testGetTreinador() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/bolsa/treinador")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/bolsa/treinador")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.asJsonString(bolsa)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
