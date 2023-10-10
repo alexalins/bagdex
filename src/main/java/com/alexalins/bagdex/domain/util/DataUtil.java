@@ -1,14 +1,13 @@
 package com.alexalins.bagdex.domain.util;
 
 
-import java.util.Calendar;
+import java.sql.Timestamp;
 import java.util.Date;
 
 public final class DataUtil {
 
-    public static Date getCurrentDate() {
-        Calendar calendar = Calendar.getInstance();
-        Date currentDate = calendar.getTime();
-        return currentDate;
+    public static Timestamp getCurrentDate() {
+        Date dataHoraAtual = new java.util.Date();
+        return  new Timestamp(dataHoraAtual.getTime());
     }
 }

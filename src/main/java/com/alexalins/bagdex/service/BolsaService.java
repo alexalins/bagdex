@@ -40,8 +40,7 @@ public class BolsaService {
     }
 
     public BolsaDTO save(Bolsa bolsa) {
-        Date sqlDate = new Date(DataUtil.getCurrentDate().getTime());
-        bolsa.setData(sqlDate);
+        bolsa.setData(DataUtil.getCurrentDate());
         BolsaDTO dto =  BolsaDTO.create(bolsaRepository.save(bolsa));
         return dto;
     }

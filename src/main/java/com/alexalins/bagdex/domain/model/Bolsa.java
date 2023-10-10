@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
@@ -23,6 +24,7 @@ public class Bolsa {
 
     private String descricao;
 
+    @Enumerated(EnumType.ORDINAL)
     private Tipo tipo;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -33,7 +35,7 @@ public class Bolsa {
     )
     private List<Pokemon> pokemon;
 
-    private Date data;
+    private Timestamp data;
 
     @ManyToOne
     private Treinador treinador;
