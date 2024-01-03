@@ -22,6 +22,7 @@ public class Bolsa {
 
     private String nome;
 
+    @Column(length = 300)
     private String descricao;
 
     @Enumerated(EnumType.ORDINAL)
