@@ -1,6 +1,7 @@
 package com.alexalins.bagdex.service;
 
 import com.alexalins.bagdex.domain.dto.BolsaDTO;
+import com.alexalins.bagdex.domain.dto.BolsaTreinadorDTO;
 import com.alexalins.bagdex.domain.model.Bolsa;
 import com.alexalins.bagdex.domain.model.Treinador;
 import com.alexalins.bagdex.domain.util.DataUtil;
@@ -23,7 +24,7 @@ public class BolsaService {
         return list.stream().map(BolsaDTO::create).collect(Collectors.toList());
     }
 
-    public List<BolsaDTO> getBolsaPorTreinadorId(Treinador treinador) {
+    public List<BolsaTreinadorDTO> getBolsaPorTreinadorId(Treinador treinador) {
         if(treinador == null) {
             return null;
         }
@@ -36,7 +37,7 @@ public class BolsaService {
         };
 
         Collections.sort(bolsas, comparadorDataDecrescente);
-        return bolsas.stream().map(BolsaDTO::create).collect(Collectors.toList());
+        return bolsas.stream().map(BolsaTreinadorDTO::create).collect(Collectors.toList());
     }
 
     public BolsaDTO save(Bolsa bolsa) {
@@ -52,5 +53,22 @@ public class BolsaService {
         }
 
         return BolsaDTO.create(getBolsa.get());
+    }
+
+    public BolsaDTO update(Long id, Bolsa bolsa) {
+        Optional<Bolsa> b = bolsaRepository.findById(id);
+        if(b.isPresent()) {
+            Bolsa myBag = new Bolsa();
+            myBag.setId(bolsa.getId());
+            myBag.setNome(bolsa.getNome());
+            myBag.setDescricao(bolsa.getDescricao());
+            myBag.setTipo(bolsa.getTipo());
+            myBag.setTreinador(bolsa.getTreinador());
+            myBag.setPokemon(bolsa.getPokemon());
+            myBag.setData(DataUtil.getCurrentDate());
+            return BolsaDTO.create(bolsaRepository.save(myBag));
+        } else  {
+            throw new EmptyResultDataAccessException("Bolsa não existe", 0);
+        }
     }
 }
