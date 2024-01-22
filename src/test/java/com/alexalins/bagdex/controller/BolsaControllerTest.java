@@ -2,7 +2,6 @@ package com.alexalins.bagdex.controller;
 
 import com.alexalins.bagdex.domain.model.Bolsa;
 import com.alexalins.bagdex.domain.model.Tipo;
-import com.alexalins.bagdex.domain.model.Treinador;
 import com.alexalins.bagdex.domain.util.JsonUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -73,5 +72,13 @@ public class BolsaControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(treinadorGet))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testUpdateBolsa() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/bolsa/editar/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.asJsonString(bolsa)))
+                .andExpect(MockMvcResultMatchers.status().isCreated());
     }
 }

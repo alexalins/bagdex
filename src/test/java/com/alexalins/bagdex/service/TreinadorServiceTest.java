@@ -72,4 +72,5 @@ public class TreinadorServiceTest {
         TreinadorDTO user = treinadorService.getTreinadorByEmail("test@example.com");
         assertNotNull(user);
     }
+
 }

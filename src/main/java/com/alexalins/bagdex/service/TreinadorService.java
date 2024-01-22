@@ -4,7 +4,6 @@ import com.alexalins.bagdex.domain.dto.TreinadorDTO;
 import com.alexalins.bagdex.domain.model.Treinador;
 import com.alexalins.bagdex.exception.EmailAlreadyExistsException;
 import com.alexalins.bagdex.repository.TreinadorRepository;
-import org.modelmapper.internal.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

@@ -1,19 +1,18 @@
 package com.alexalins.bagdex.service;
 
 import com.alexalins.bagdex.domain.dto.BolsaDTO;
-import com.alexalins.bagdex.domain.dto.TreinadorDTO;
+import com.alexalins.bagdex.domain.dto.BolsaTreinadorDTO;
 import com.alexalins.bagdex.domain.model.Bolsa;
 import com.alexalins.bagdex.domain.model.Tipo;
 import com.alexalins.bagdex.domain.model.Treinador;
-import com.alexalins.bagdex.exception.EmailAlreadyExistsException;
 import com.alexalins.bagdex.repository.BolsaRepository;
-import net.bytebuddy.dynamic.DynamicType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +78,12 @@ public class BolsaServiceTest {
         assertEquals(bolsa.getNome(), myBolsa.getNome());
     }
 
+    @Test
+    public void getBolsaIdErro() {
+        when(bolsaRepository.findById(1L)).thenReturn(null);
+        EmptyResultDataAccessException result = assertThrows(EmptyResultDataAccessException.class, () -> bolsaService.getBolsaId(0l));
+        assertTrue(result.getMessage().contains("Bolsa não existe!"));
+    }
 
     @Test
     public void getBolsaPorTreinadorId() {
@@ -88,7 +93,31 @@ public class BolsaServiceTest {
         treinador.setEmail("test@example.com");
         List<Bolsa> bolsas = new ArrayList<>();
         when(bolsaRepository.findByTreinadorId(treinador.getId())).thenReturn(bolsas);
-        List<BolsaDTO> myBolsas = bolsaService.getBolsaPorTreinadorId(treinador);
+        List<BolsaTreinadorDTO> myBolsas = bolsaService.getBolsaPorTreinadorId(treinador);
         assertEquals(bolsas.size(), myBolsas.size());
+    }
+
+    @Test
+    public void getBolsaPorTreinadorIdErro() {
+        when(bolsaRepository.findByTreinadorId(treinador.getId())).thenReturn(null);
+        EmptyResultDataAccessException result = assertThrows(EmptyResultDataAccessException.class, () -> bolsaService.getBolsaPorTreinadorId(null));
+        assertTrue(result.getMessage().contains("Treinador não existe!"));
+    }
+
+    @Test
+    public void testEditarBolsa() {
+        bolsa.setId(1l);
+        Optional<Bolsa> opBolsa = Optional.of(bolsa);
+        when(bolsaRepository.findById(1L)).thenReturn(opBolsa);
+        when(bolsaRepository.save(any())).thenReturn(bolsa);
+        BolsaDTO updatedBolsa = bolsaService.update(bolsa.getId(), bolsa);
+        assertNotNull(updatedBolsa);
+    }
+
+    @Test
+    public void testEditarBolsaErro() {
+        when(bolsaRepository.findById(1L)).thenReturn(null);
+        EmptyResultDataAccessException result = assertThrows(EmptyResultDataAccessException.class, () -> bolsaService.update(0l, null));
+        assertTrue(result.getMessage().contains("Bolsa não existe!"));
     }
 }

@@ -1,13 +1,8 @@
 package com.alexalins.bagdex.controller;
 
-import com.alexalins.bagdex.domain.model.Treinador;
-import com.alexalins.bagdex.domain.util.JsonUtil;
-import com.alexalins.bagdex.repository.TreinadorRepository;
-import com.alexalins.bagdex.service.TreinadorService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;

@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,7 +25,7 @@ public class BolsaService {
 
     public List<BolsaTreinadorDTO> getBolsaPorTreinadorId(Treinador treinador) {
         if(treinador == null) {
-            return null;
+            throw new EmptyResultDataAccessException("Treinador não existe!", 0);
         }
         List<Bolsa> bolsas = bolsaRepository.findByTreinadorId(treinador.getId());
         Comparator<Bolsa> comparadorDataDecrescente = new Comparator<Bolsa>() {
@@ -49,7 +48,7 @@ public class BolsaService {
     public BolsaDTO getBolsaId(Long id) {
         Optional<Bolsa> getBolsa = bolsaRepository.findById(id);
         if(!getBolsa.isPresent()) {
-            throw new EmptyResultDataAccessException("Bolsa não existe", 0);
+            throw new EmptyResultDataAccessException("Bolsa não existe!", 0);
         }
 
         return BolsaDTO.create(getBolsa.get());
@@ -68,7 +67,7 @@ public class BolsaService {
             myBag.setData(DataUtil.getCurrentDate());
             return BolsaDTO.create(bolsaRepository.save(myBag));
         } else  {
-            throw new EmptyResultDataAccessException("Bolsa não existe", 0);
+            throw new EmptyResultDataAccessException("Bolsa não existe!", 0);
         }
     }
 }
