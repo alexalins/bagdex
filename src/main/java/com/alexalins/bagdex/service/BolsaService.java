@@ -70,4 +70,12 @@ public class BolsaService {
             throw new EmptyResultDataAccessException("Bolsa não existe!", 0);
         }
     }
+
+    public boolean delete(Long id) {
+        if(getBolsaId(id) != null) {
+            bolsaRepository.deleteById(id);
+            return true;
+        }
+        return  false;
+    }
 }

@@ -57,4 +57,11 @@ public class BolsaController {
         BolsaDTO bolsaDto = bolsaService.update(id, bolsa);
         return ResponseEntity.created(getUri(bolsaDto.getId())).build();
     }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable("id") Long id) {
+        bolsaService.delete(id);
+        return ResponseEntity.ok().build();
+    }
 }
