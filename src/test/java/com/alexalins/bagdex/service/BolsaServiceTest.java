@@ -6,8 +6,7 @@ import com.alexalins.bagdex.domain.model.Bolsa;
 import com.alexalins.bagdex.domain.model.Tipo;
 import com.alexalins.bagdex.domain.model.Treinador;
 import com.alexalins.bagdex.repository.BolsaRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +18,12 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class BolsaServiceTest {
 
     @Autowired
@@ -47,6 +48,7 @@ public class BolsaServiceTest {
         treinador.setEmail("test@example.com");
         //
         bolsa = new Bolsa();
+        bolsa.setId(1l);
         bolsa.setNome("Bolsa teste");
         bolsa.setDescricao("Bolsa teste");
         bolsa.setTipo(Tipo.JA_TENHO);
@@ -57,6 +59,7 @@ public class BolsaServiceTest {
     }
 
     @Test
+    @Order(1)
     public void testSalvarBolsa() {
         when(bolsaRepository.save(any())).thenReturn(bolsa);
         BolsaDTO savedBolsa = bolsaService.save(bolsa);
@@ -64,6 +67,7 @@ public class BolsaServiceTest {
     }
 
     @Test
+    @Order(2)
     public void testGetBolsas() {
         when(bolsaRepository.findAll()).thenReturn(listBolsas);
         List<BolsaDTO> myBolsas = bolsaService.getBolsas();
@@ -71,6 +75,7 @@ public class BolsaServiceTest {
     }
 
     @Test
+    @Order(3)
     public void getBolsaId() {
         Optional<Bolsa> opBolsa = Optional.of(bolsa);
         when(bolsaRepository.findById(1L)).thenReturn(opBolsa);
@@ -86,6 +91,7 @@ public class BolsaServiceTest {
     }
 
     @Test
+    @Order(4)
     public void getBolsaPorTreinadorId() {
         Treinador treinador = new Treinador();
         treinador.setId(1L);
@@ -105,6 +111,7 @@ public class BolsaServiceTest {
     }
 
     @Test
+    @Order(5)
     public void testEditarBolsa() {
         bolsa.setId(1l);
         Optional<Bolsa> opBolsa = Optional.of(bolsa);
@@ -118,6 +125,27 @@ public class BolsaServiceTest {
     public void testEditarBolsaErro() {
         when(bolsaRepository.findById(1L)).thenReturn(null);
         EmptyResultDataAccessException result = assertThrows(EmptyResultDataAccessException.class, () -> bolsaService.update(0l, null));
+        assertTrue(result.getMessage().contains("Bolsa não existe!"));
+    }
+
+    @Test
+    @Order(6)
+    public void testDeletarBolsa() {
+        //salvando
+        when(bolsaRepository.save(any())).thenReturn(bolsa);
+        bolsaService.save(bolsa);
+        //
+        bolsa.setId(1l);
+        Optional<Bolsa> opBolsa = Optional.of(bolsa);
+        when(bolsaRepository.findById(1L)).thenReturn(opBolsa);
+        boolean result = bolsaService.delete(bolsa.getId());
+        assertTrue(result);
+    }
+
+    @Test
+    public void testDeletarBolsaErro() {
+        when(bolsaRepository.findById(1L)).thenReturn(null);
+        EmptyResultDataAccessException result = assertThrows(EmptyResultDataAccessException.class, () -> bolsaService.delete(1l));
         assertTrue(result.getMessage().contains("Bolsa não existe!"));
     }
 }

@@ -81,4 +81,16 @@ public class BolsaControllerTest {
                         .content(JsonUtil.asJsonString(bolsa)))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
+
+    @Test
+    public void testDeleteBolsa() throws Exception {
+        //salva
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/bolsa/salvar")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.asJsonString(bolsa)))
+                .andExpect(MockMvcResultMatchers.status().isCreated());
+        //deleta
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/bolsa/2"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 }
