@@ -1,6 +1,7 @@
 package com.alexalins.bagdex.controller;
 
 import com.alexalins.bagdex.domain.model.Bolsa;
+import com.alexalins.bagdex.domain.model.Pokemon;
 import com.alexalins.bagdex.domain.model.Tipo;
 import com.alexalins.bagdex.domain.util.JsonUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +27,9 @@ public class BolsaControllerTest {
 
     private String treinadorGet;
 
+    private Pokemon pokemon;
+
+
     @BeforeEach
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
@@ -40,6 +44,11 @@ public class BolsaControllerTest {
                 "        \"nome\": \"teste\",\n" +
                 "        \"email\": \"teste@teste.com\"\n" +
                 "    }";
+
+        pokemon = new Pokemon();
+        pokemon.setId(1l);
+        pokemon.setNome("Pikachu");
+        pokemon.setFoto("urlfoto/pikachu");
     }
 
     @Test
@@ -92,5 +101,13 @@ public class BolsaControllerTest {
         //deleta
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/bolsa/2"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void savePokemon() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/bolsa/save/pokemon/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.asJsonString(pokemon)))
+                .andExpect(MockMvcResultMatchers.status().isCreated());
     }
 }

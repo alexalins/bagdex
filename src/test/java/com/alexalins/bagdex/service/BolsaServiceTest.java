@@ -3,9 +3,11 @@ package com.alexalins.bagdex.service;
 import com.alexalins.bagdex.domain.dto.BolsaDTO;
 import com.alexalins.bagdex.domain.dto.BolsaTreinadorDTO;
 import com.alexalins.bagdex.domain.model.Bolsa;
+import com.alexalins.bagdex.domain.model.Pokemon;
 import com.alexalins.bagdex.domain.model.Tipo;
 import com.alexalins.bagdex.domain.model.Treinador;
 import com.alexalins.bagdex.repository.BolsaRepository;
+import com.alexalins.bagdex.repository.PokemonRepository;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -31,6 +33,9 @@ public class BolsaServiceTest {
 
     @Mock
     private BolsaRepository bolsaRepository;
+
+    @Mock
+    private PokemonRepository pokemonRepository;
 
     private Treinador treinador;
 
@@ -129,7 +134,7 @@ public class BolsaServiceTest {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     public void testDeletarBolsa() {
         //salvando
         when(bolsaRepository.save(any())).thenReturn(bolsa);
@@ -147,5 +152,34 @@ public class BolsaServiceTest {
         when(bolsaRepository.findById(1L)).thenReturn(null);
         EmptyResultDataAccessException result = assertThrows(EmptyResultDataAccessException.class, () -> bolsaService.delete(1l));
         assertTrue(result.getMessage().contains("Bolsa não existe!"));
+    }
+
+    @Test
+    @Order(6)
+    void testSavePokemonBag() {
+        Long bagId = 1L;
+        Pokemon pokemon = new Pokemon();
+        pokemon.setId(bagId);
+        bolsa.setId(bagId);
+        Optional<Bolsa> opBolsa = Optional.of(bolsa);
+        //
+        when(bolsaRepository.findById(anyLong())).thenReturn(opBolsa);
+        when(pokemonRepository.findById(bagId)).thenReturn(Optional.empty());
+
+        BolsaDTO result = bolsaService.savePokemonBag(bagId, pokemon);
+
+        assertNotNull(result);
+    }
+
+    @Test
+    void testSavePokemonBagErro() {
+        Long bagId = 2L;
+        Pokemon pokemon = new Pokemon();
+
+        when(bolsaRepository.findById(bagId)).thenReturn(Optional.empty());
+
+        assertThrows(EmptyResultDataAccessException.class, () -> {
+            bolsaService.savePokemonBag(bagId, pokemon);
+        });
     }
 }
