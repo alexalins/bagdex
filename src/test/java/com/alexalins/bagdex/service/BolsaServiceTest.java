@@ -134,7 +134,7 @@ public class BolsaServiceTest {
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     public void testDeletarBolsa() {
         //salvando
         when(bolsaRepository.save(any())).thenReturn(bolsa);
@@ -173,6 +173,32 @@ public class BolsaServiceTest {
 
     @Test
     void testSavePokemonBagErro() {
+        Long bagId = 2L;
+        Pokemon pokemon = new Pokemon();
+
+        when(bolsaRepository.findById(bagId)).thenReturn(Optional.empty());
+
+        assertThrows(EmptyResultDataAccessException.class, () -> {
+            bolsaService.savePokemonBag(bagId, pokemon);
+        });
+    }
+
+    @Test
+    @Order(7)
+    void testDeletePokemonBag() {
+        Long bagId = 1L;
+        Pokemon pokemon = new Pokemon();
+        pokemon.setId(bagId);
+        bolsa.setId(bagId);
+        Optional<Bolsa> opBolsa = Optional.of(bolsa);
+        //
+        when(bolsaRepository.findById(anyLong())).thenReturn(opBolsa);
+        BolsaDTO result = bolsaService.deletePokemonBag(bagId, pokemon);
+        assertNotNull(result);
+    }
+
+    @Test
+    void testDeletePokemonBagErro() {
         Long bagId = 2L;
         Pokemon pokemon = new Pokemon();
 
