@@ -3,6 +3,7 @@ package com.alexalins.bagdex.controller;
 import com.alexalins.bagdex.domain.dto.BolsaDTO;
 import com.alexalins.bagdex.domain.dto.BolsaTreinadorDTO;
 import com.alexalins.bagdex.domain.model.Bolsa;
+import com.alexalins.bagdex.domain.model.Pokemon;
 import com.alexalins.bagdex.domain.model.Treinador;
 import com.alexalins.bagdex.service.BolsaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,5 +64,12 @@ public class BolsaController {
     public ResponseEntity delete(@PathVariable("id") Long id) {
         bolsaService.delete(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/save/pokemon/{id}")
+    public ResponseEntity savePokemon(@PathVariable("id") Long id,
+                                 @RequestBody Pokemon pokemon) {
+        BolsaDTO bolsaDto = bolsaService.savePokemonBag(id, pokemon);
+        return ResponseEntity.created(getUri(bolsaDto.getId())).build();
     }
 }

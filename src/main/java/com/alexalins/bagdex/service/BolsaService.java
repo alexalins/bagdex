@@ -3,9 +3,11 @@ package com.alexalins.bagdex.service;
 import com.alexalins.bagdex.domain.dto.BolsaDTO;
 import com.alexalins.bagdex.domain.dto.BolsaTreinadorDTO;
 import com.alexalins.bagdex.domain.model.Bolsa;
+import com.alexalins.bagdex.domain.model.Pokemon;
 import com.alexalins.bagdex.domain.model.Treinador;
 import com.alexalins.bagdex.domain.util.DataUtil;
 import com.alexalins.bagdex.repository.BolsaRepository;
+import com.alexalins.bagdex.repository.PokemonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,9 @@ import java.util.stream.Collectors;
 public class BolsaService {
     @Autowired
     private BolsaRepository bolsaRepository;
+
+    @Autowired
+    private PokemonRepository pokemonRepository;
 
     public List<BolsaDTO> getBolsas() {
         List<Bolsa> list = bolsaRepository.findAll();
@@ -78,4 +83,30 @@ public class BolsaService {
         }
         return  false;
     }
+
+    public BolsaDTO savePokemonBag(Long id, Pokemon pokemon) {
+        Optional<Bolsa> b = bolsaRepository.findById(id);
+        if(b.isPresent()) {
+            Bolsa myBag = b.get();
+            //
+            List<Pokemon> listPokemon = myBag.getPokemon();
+            listPokemon.add(savePokemon(pokemon));
+            //
+            myBag.setPokemon(listPokemon);
+            myBag.setData(DataUtil.getCurrentDate());
+            return BolsaDTO.create(bolsaRepository.save(myBag));
+        } else  {
+            throw new EmptyResultDataAccessException("Bolsa não existe!", 0);
+        }
+    }
+
+    private Pokemon savePokemon(Pokemon pokemon) {
+        Optional<Pokemon> findPokemon = pokemonRepository.findById(pokemon.getId());
+        if (findPokemon.isPresent()) {
+            return findPokemon.get();
+        }
+        return pokemonRepository.save(pokemon);
+    }
+
+
 }
