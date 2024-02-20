@@ -72,4 +72,11 @@ public class BolsaController {
         BolsaDTO bolsaDto = bolsaService.savePokemonBag(id, pokemon);
         return ResponseEntity.created(getUri(bolsaDto.getId())).build();
     }
+
+    @PutMapping("/delete/pokemon/{id}")
+    public ResponseEntity deletePokemon(@PathVariable("id") Long id,
+                                      @RequestBody Pokemon pokemon) {
+        BolsaDTO bolsaDto = bolsaService.deletePokemonBag(id, pokemon);
+        return ResponseEntity.created(getUri(bolsaDto.getId())).build();
+    }
 }

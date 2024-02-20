@@ -100,6 +100,20 @@ public class BolsaService {
         }
     }
 
+    public BolsaDTO deletePokemonBag(Long id, Pokemon pokemon) {
+        Optional<Bolsa> b = bolsaRepository.findById(id);
+        if(b.isPresent()) {
+            Bolsa myBag = b.get();
+            //
+            List<Pokemon> listPokemon = myBag.getPokemon();
+            myBag.setPokemon(deletarPokemonBag(listPokemon, pokemon));
+            myBag.setData(DataUtil.getCurrentDate());
+            return BolsaDTO.create(bolsaRepository.save(myBag));
+        } else  {
+            throw new EmptyResultDataAccessException("Bolsa não existe!", 0);
+        }
+    }
+
     private Pokemon savePokemon(Pokemon pokemon) {
         Optional<Pokemon> findPokemon = pokemonRepository.findById(pokemon.getId());
         if (findPokemon.isPresent()) {
@@ -108,5 +122,12 @@ public class BolsaService {
         return pokemonRepository.save(pokemon);
     }
 
+    private List<Pokemon> deletarPokemonBag(List<Pokemon> listPokemon, Pokemon pokemon) {
+        if(pokemon != null) {
+            listPokemon.remove(pokemon);
+        }
+
+        return listPokemon;
+    }
 
 }
